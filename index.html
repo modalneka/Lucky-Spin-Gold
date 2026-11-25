@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LUCKY SPIN Mahjong Gold</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #100d08;
+  color: #ffd76a;
+  text-align: center;
+}
+
+header {
+  padding: 20px 10px;
+  background: linear-gradient(135deg, #271900, #8b6412, #271900);
+  border-bottom: 2px solid #e9bd45;
+}
+
+h1 {
+  margin: 0;
+  font-size: 27px;
+  color: #ffdf75;
+  text-shadow: 0 0 10px #bd8417;
+}
+
+.subtitle {
+  font-size: 12px;
+  color: #fff0bc;
+  margin-top: 6px;
+}
+
+.container {
+  max-width: 440px;
+  margin: auto;
+  padding: 15px;
+}
+
+.card {
+  background: #21190c;
+  border: 1px solid #9d7729;
+  border-radius: 15px;
+  padding: 18px;
+  margin-bottom: 15px;
+  box-shadow: 0 0 12px #4d340c;
+}
+
+.coins {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 10px;
+  color: #ffdf68;
+}
+
+.reels {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 20px 0;
+}
+
+.reel {
+  width: 95px;
+  height: 100px;
+  border: 3px solid #d5a632;
+  border-radius: 12px;
+  background: linear-gradient(#fff2c4, #d6a63c);
+  color: #382300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 45px;
+  box-shadow: inset 0 0 10px #a66c09;
+}
+
+button {
+  border: none;
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.spin {
+  width: 90%;
+  background: linear-gradient(135deg, #ffe98a, #c58a16);
+  color: #3b2500;
+  box-shadow: 0 0 15px #c18b23;
+}
+
+.spin:disabled {
+  opacity: 0.5;
+}
+
+.small {
+  background: #403016;
+  color: #ffe28a;
+  border: 1px solid #98732a;
+  margin: 5px;
+}
+
+#message {
+  min-height: 30px;
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+.info {
+  color: #c9b88c;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+footer {
+  padding: 20px;
+  color: #87754d;
+  font-size: 11px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>LUCKY SPIN</h1>
+  <div class="subtitle">MAHJONG GOLD • DEMO GAME</div>
+</header>
+
+<div class="container">
+
+  <div class="card">
+    <div>Saldo Koin Virtual</div>
+    <div class="coins" id="coins">100</div>
+    <div>Level <span id="level">1</span> • XP <span id="xp">0</span></div>
+  </div>
+
+  <div class="card">
+    <h3>🎰 MAHJONG SPIN</h3>
+
+    <div class="reels">
+      <div class="reel" id="r1">🀄</div>
+      <div class="reel" id="r2">🀄</div>
+      <div class="reel" id="r3">🀄</div>
+    </div>
+
+    <button class="spin" id="spinBtn" onclick="spin()">SPIN</button>
+
+    <div id="message">Tekan SPIN untuk bermain!</div>
+
+    <button class="small" onclick="dailyBonus()">🎁 Bonus Harian Demo</button>
+    <button class="small" onclick="resetGame()">↻ Reset Demo</button>
+  </div>
+
+  <div class="card">
+    <h3>📋 Misi Demo</h3>
+    <p>Putar 5 kali untuk mendapatkan XP.</p>
+    <p>Jumlah putaran: <span id="spins">0</span>/5</p>
+    <p>XP: <span id="missionXP">0</span></p>
+  </div>
+
+  <div class="card info">
+    Game ini masih berupa demo lokal. Koin tidak memiliki nilai uang,
+    tidak bisa ditukar atau ditarik. Data belum tersimpan di server.
+  </div>
+
+</div>
+
+<footer>LUCKY SPIN Mahjong Gold • Demo Version</footer>
+
+<script>
+let coins = 100;
+let xp = 0;
+let spins = 0;
+let level = 1;
+let bonusUsed = false;
+
+const symbols = ["🀄", "🀙", "🀚", "🀛", "🀜", "🀝", "🀟", "🀠", "🀡", "💎"];
+
+function update() {
+  document.getElementById("coins").textContent = coins;
+  document.getElementById("xp").textContent = xp;
+  document.getElementById("level").textContent = level;
+  document.getElementById("spins").textContent = spins;
+  document.getElementById("missionXP").textContent = xp;
+}
+
+function spin() {
+  if (coins < 1) {
+    document.getElementById("message").textContent =
+      "Koin demo habis. Gunakan Reset Demo untuk mengulang.";
+    return;
+  }
+
+  coins -= 1;
+  spins += 1;
+  xp += 1;
+
+  if (xp >= level * 10) {
+    xp = 0;
+    level++;
+  }
+
+  const a = symbols[Math.floor(Math.random() * symbols.length)];
+  const b = symbols[Math.floor(Math.random() * symbols.length)];
+  const c = symbols[Math.floor(Math.random() * symbols.length)];
+
+  document.getElementById("r1").textContent = a;
+  document.getElementById("r2").textContent = b;
+  document.getElementById("r3").textContent = c;
+
+  if (a === b && b === c) {
+    coins += 5;
+    document.getElementById("message").textContent =
+      "✨ Kombinasi sama! +5 koin virtual demo.";
+  } else {
+    document.getElementById("message").textContent =
+      "Putaran selesai. Hasil acak demo.";
+  }
+
+  if (spins === 5) {
+    xp += 5;
+    document.getElementById("message").textContent +=
+      " Misi 5 putaran selesai: +5 XP!";
+  }
+
+  update();
+}
+
+function dailyBonus() {
+  if (bonusUsed) {
+    document.getElementById("message").textContent =
+      "Bonus demo sudah digunakan. Reset demo untuk mengulang.";
+    return;
+  }
+
+  coins += 10;
+  bonusUsed = true;
+  document.getElementById("message").textContent =
+    "Bonus demo +10 koin virtual!";
+  update();
+}
+
+function resetGame() {
+  coins = 100;
+  xp = 0;
+  spins = 0;
+  level = 1;
+  bonusUsed = false;
+
+  document.getElementById("r1").textContent = "🀄";
+  document.getElementById("r2").textContent = "🀄";
+  document.getElementById("r3").textContent = "🀄";
+  document.getElementById("message").textContent =
+    "Demo direset. Selamat bermain!";
+
+  update();
+}
+
+update();
+</script>
+
+</body>
+</html>
